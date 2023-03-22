@@ -1,14 +1,15 @@
+import { MouseEvent, useEffect, useState } from "react"
+import { useDispatch } from "react-redux"
+import axios from "axios"
+
 import { Box, Button, Grid, MenuItem, TextField, Typography } from "@mui/material"
 import { useFormik } from "formik"
-import { CustomBox, CustomButton } from "./styles"
 import * as yup from 'yup'
-import { MouseEvent, useEffect, useState } from "react"
-import axios from "axios"
-import { useAppDispatch } from "../../../reduxToolkit/hooks"
-import { addCustomer } from "../../../reduxToolkit/customerSlice"
-import { useDispatch } from "react-redux"
+
+import { Customer } from "../../../redux/customer/reducer"
 import { addNewCustomerAction } from "../../../redux/customer/actions"
 
+import { CustomBox } from "./styles"
 
 interface FederationUnities {
   id: number,
@@ -24,24 +25,23 @@ interface NewCustomerProps {
   handleClose: () => void
 }
 
+const formSchema = yup.object().shape({
+  name: yup.string().required('Campo obrigatório'),
+  street: yup.string().required('Campo obrigatório'),
+  streetNumber: yup.number().required('Campo obrigatório'),
+  federationUnity: yup.string().required('Campo obrigatório'),
+  city: yup.string().required('Campo obrigatório'),
+  phone: yup.string().required('Campo obrigatório')
+})
+
 export function NewCustomer({ handleClose }: NewCustomerProps) {
   const [federationUnities, setFederationUnities] = useState<FederationUnities[]>([])
   const [selectedUf, setSelectedUf] = useState('')
   const [cities, setCities] = useState<Cities[]>([])
-  // const dispatch = useAppDispatch()
 
   const dispatch = useDispatch()
 
-  const formSchema = yup.object().shape({
-    name: yup.string().required('Campo obrigatório'),
-    street: yup.string().required('Campo obrigatório'),
-    streetNumber: yup.number().required('Campo obrigatório'),
-    federationUnity: yup.string().required('Campo obrigatório'),
-    city: yup.string().required('Campo obrigatório'),
-    phone: yup.string().required('Campo obrigatório')
-  })
-
-  const formik = useFormik({
+  const newCustomerForm = useFormik({
     initialValues: {
       name: '',
       street: '',
@@ -51,7 +51,8 @@ export function NewCustomer({ handleClose }: NewCustomerProps) {
       phone: ''
     },
     validationSchema: formSchema,
-    onSubmit: (values) => {
+    onSubmit: (values, actions) => {
+
       const newCustomer: Customer = {
         id: Math.random(),
         name: values.name,
@@ -61,12 +62,14 @@ export function NewCustomer({ handleClose }: NewCustomerProps) {
         city: values.city,
         phone: values.phone,
       }
+
       dispatch(addNewCustomerAction(newCustomer))
-      
-      // ! Retirar esse código
-      alert(JSON.stringify(values, null, 2))
+    
+      actions.resetForm()
     }
   })
+
+  const {handleSubmit, handleChange, values, touched, errors} = newCustomerForm
 
   useEffect(() => {
     axios
@@ -87,15 +90,10 @@ export function NewCustomer({ handleClose }: NewCustomerProps) {
   function handleSelectedUf(event: MouseEvent<HTMLLIElement>) {
     const federationUnity = event.currentTarget.getAttribute('data-value')
     
-    if(federationUnity){
+    if (federationUnity){
       setSelectedUf(federationUnity)
     }
   }
-
-  console.log(federationUnities)
-  console.log(selectedUf)
-  console.log(cities)
-  // console.log(formik.values.state)
 
   return (
     <CustomBox>
@@ -107,18 +105,17 @@ export function NewCustomer({ handleClose }: NewCustomerProps) {
         Adicionar novo cliente
       </Typography>
 
-      <form noValidate onSubmit={formik.handleSubmit}>
+      <form noValidate onSubmit={handleSubmit}>
         <Grid container spacing={2} columns={5} >
           <Grid item xs={5}>
             <TextField
-              fullWidth 
-              // id='name'
+              fullWidth
               label='Nome'
               name='name'
-              value={formik.values.name}
-              onChange={formik.handleChange}
-              error={formik.touched.name && Boolean(formik.errors.name)}
-              helperText={formik.touched.name && formik.errors.name}
+              value={values.name}
+              onChange={handleChange}
+              error={touched.name && Boolean(errors.name)}
+              helperText={touched.name && errors.name}
             />
           </Grid>
 
@@ -127,10 +124,10 @@ export function NewCustomer({ handleClose }: NewCustomerProps) {
               fullWidth
               label='Rua'
               name='street'
-              value={formik.values.street}
-              onChange={formik.handleChange}
-              error={formik.touched.street && Boolean(formik.errors.street)}
-              helperText={formik.touched.street && formik.errors.street}
+              value={values.street}
+              onChange={handleChange}
+              error={touched.street && Boolean(errors.street)}
+              helperText={touched.street && errors.street}
             />
           </Grid>
 
@@ -139,10 +136,10 @@ export function NewCustomer({ handleClose }: NewCustomerProps) {
               fullWidth
               label='Número'
               name='streetNumber'
-              value={formik.values.streetNumber}
-              onChange={formik.handleChange}
-              error={formik.touched.streetNumber && Boolean(formik.errors.streetNumber)}
-              helperText={formik.touched.streetNumber && formik.errors.streetNumber}
+              value={values.streetNumber}
+              onChange={handleChange}
+              error={touched.streetNumber && Boolean(errors.streetNumber)}
+              helperText={touched.streetNumber && errors.streetNumber}
             />
           </Grid>
 
@@ -152,10 +149,10 @@ export function NewCustomer({ handleClose }: NewCustomerProps) {
               select
               label='Estado'
               name='federationUnity'
-              value={formik.values.federationUnity}
-              onChange={formik.handleChange}
-              error={formik.touched.federationUnity && Boolean(formik.errors.federationUnity)}
-              helperText={formik.touched.federationUnity && formik.errors.federationUnity}
+              value={values.federationUnity}
+              onChange={handleChange}
+              error={touched.federationUnity && Boolean(errors.federationUnity)}
+              helperText={touched.federationUnity && errors.federationUnity}
             >
               {federationUnities.map((federationUnity) => {
                 return (
@@ -177,10 +174,10 @@ export function NewCustomer({ handleClose }: NewCustomerProps) {
               select
               label='Cidade'
               name='city'
-              value={formik.values.city}
-              onChange={formik.handleChange}
-              error={formik.touched.city && Boolean(formik.errors.city)}
-              helperText={formik.touched.city && formik.errors.city}
+              value={values.city}
+              onChange={handleChange}
+              error={touched.city && Boolean(errors.city)}
+              helperText={touched.city && errors.city}
             >
               {cities.map((city) => {
                 return (  
@@ -200,10 +197,10 @@ export function NewCustomer({ handleClose }: NewCustomerProps) {
               fullWidth
               label='Telefone'
               name='phone'
-              value={formik.values.phone}
-              onChange={formik.handleChange}
-              error={formik.touched.phone && Boolean(formik.errors.phone)}
-              helperText={formik.touched.phone && formik.errors.phone}
+              value={values.phone}
+              onChange={handleChange}
+              error={touched.phone && Boolean(errors.phone)}
+              helperText={touched.phone && errors.phone}
             />
           </Grid>
         </Grid>
@@ -218,7 +215,6 @@ export function NewCustomer({ handleClose }: NewCustomerProps) {
             sx={{ width: 176, textTransform: "none" }} 
             variant='contained' 
             type="submit"
-            // onClick={formik.handleReset}
           >
             Adicionar
           </Button>

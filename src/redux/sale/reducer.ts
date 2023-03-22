@@ -10,15 +10,22 @@ export interface Sale {
   price: number
 }
 
-type SaleState = {
+export interface SaleState {
   sales: Sale[]
+}
+
+interface SaleAction {
+  type: string,
+  payload: {
+    sale: Sale
+  }
 }
 
 const initialState: SaleState = {
   sales: []
 }
 
-function saleReducer(state = initialState, action: any) {
+export function saleReducer(state = initialState, action: SaleAction) {
   switch(action.type) {
     case SaleActionTypes.ADD_NEW_SALE:
       return {
@@ -29,5 +36,3 @@ function saleReducer(state = initialState, action: any) {
       return state
   }
 }
-
-export default saleReducer

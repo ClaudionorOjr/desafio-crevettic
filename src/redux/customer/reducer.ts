@@ -1,5 +1,26 @@
 import { CustomerActionTypes } from "./actions"
 
+export interface Customer {
+  id: number
+  name: string,
+  street: string,
+  streetNumber: number,
+  federationUnity: string,
+  city: string,
+  phone: string
+}
+
+export interface CustomerState {
+  customers: Customer[]
+}
+
+interface CustomerAction {
+  type: string,
+  payload: {
+    customer: Customer
+  }
+}
+
 const initialState: CustomerState = {
   customers: [
     {
@@ -41,28 +62,9 @@ const initialState: CustomerState = {
   ]
 }
 
-// type PayloadAciton = {
-//   type: string,
-//   payload: {
-//     name: string,
-//     street: string
-//   }
-// }
-
-// ! Alterar a tipagem da 'action'
-function customerReducer(state = initialState, action: any) {
+export function customerReducer(state = initialState, action: CustomerAction) {
   switch (action.type) {
     case CustomerActionTypes.ADD_NEW_CUSTOMER: 
-    // const newCustomer: Customer = {
-    //   id: Math.random(),
-    //   name: action.customer.name,
-    //   street: action.customer.street,
-    //   streetNumber: action.customer.streetNumber,
-    //   federationUnity: action.customer.federationUnity,
-    //   city: action.customer.city,
-    //   phone: action.customer.phone,
-    // }
-    //state.customers.concat(newCustomer) 
       return {
         ...state,
         customers: [...state.customers, action.payload.customer]
@@ -70,7 +72,4 @@ function customerReducer(state = initialState, action: any) {
     default:
       return state
   }
-
 }
-
-export default customerReducer

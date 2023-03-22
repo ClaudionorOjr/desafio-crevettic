@@ -1,11 +1,11 @@
 import logoCrevettic from '../../assets/logo.svg'
 
-import styles from './styles.module.css'
+import { CustomHeader } from './styles'
 
 export function Header() {
   return (
-    <header className={styles.header}>
+    <CustomHeader>
       <img src={logoCrevettic} alt="Logo Crevettic" />
-    </header>
+    </CustomHeader>
   )
 }
