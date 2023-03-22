@@ -4,19 +4,13 @@ import { CustomBox, CustomButton } from "./styles"
 import * as yup from 'yup'
 import { MouseEvent, useEffect, useState } from "react"
 import axios from "axios"
-import { useAppDispatch } from "../../../redux/hooks"
-import { addCustomer } from "../../../redux/customerSlice"
+import { useAppDispatch } from "../../../reduxToolkit/hooks"
+import { addCustomer } from "../../../reduxToolkit/customerSlice"
+import { useDispatch } from "react-redux"
+import { addNewCustomerAction } from "../../../redux/customer/actions"
 
-interface FormData {
-  name: string,
-  street: string,
-  streetNumber: string,
-  federationUnity: string,
-  city: string,
-  phone: string
-}
 
-interface UF {
+interface FederationUnities {
   id: number,
   sigla: string,
 }
@@ -26,20 +20,17 @@ interface Cities {
   nome: string
 }
 
-export function NewCustomer() {
-  const [ufs, setUfs] = useState<UF[]>([])
+interface NewCustomerProps {
+  handleClose: () => void
+}
+
+export function NewCustomer({ handleClose }: NewCustomerProps) {
+  const [federationUnities, setFederationUnities] = useState<FederationUnities[]>([])
   const [selectedUf, setSelectedUf] = useState('')
   const [cities, setCities] = useState<Cities[]>([])
-  const dispatch = useAppDispatch()
+  // const dispatch = useAppDispatch()
 
-  const initialValues: FormData = {
-    name: '',
-    street: '',
-    streetNumber: '',
-    federationUnity: '',
-    city: '',
-    phone: ''
-  }
+  const dispatch = useDispatch()
 
   const formSchema = yup.object().shape({
     name: yup.string().required('Campo obrigatório'),
@@ -51,10 +42,28 @@ export function NewCustomer() {
   })
 
   const formik = useFormik({
-    initialValues: initialValues,
+    initialValues: {
+      name: '',
+      street: '',
+      streetNumber: '',
+      federationUnity: '',
+      city: '',
+      phone: ''
+    },
     validationSchema: formSchema,
     onSubmit: (values) => {
-      dispatch(addCustomer(values))
+      const newCustomer: Customer = {
+        id: Math.random(),
+        name: values.name,
+        street: values.street,
+        streetNumber: Number(values.streetNumber),
+        federationUnity: values.federationUnity,
+        city: values.city,
+        phone: values.phone,
+      }
+      dispatch(addNewCustomerAction(newCustomer))
+      
+      // ! Retirar esse código
       alert(JSON.stringify(values, null, 2))
     }
   })
@@ -63,8 +72,8 @@ export function NewCustomer() {
     axios
     .get('https://servicodados.ibge.gov.br/api/v1/localidades/estados')
     .then((response) => {
-      setUfs(response.data)
-    })
+      setFederationUnities(response.data)
+    })  
   }, [])
 
   useEffect(() => {
@@ -76,22 +85,24 @@ export function NewCustomer() {
   }, [selectedUf])
 
   function handleSelectedUf(event: MouseEvent<HTMLLIElement>) {
-    const uf = event.currentTarget.getAttribute('data-value')
+    const federationUnity = event.currentTarget.getAttribute('data-value')
     
-    if(uf){
-      setSelectedUf(uf)
+    if(federationUnity){
+      setSelectedUf(federationUnity)
     }
   }
 
-  console.log(ufs)
+  console.log(federationUnities)
   console.log(selectedUf)
   console.log(cities)
   // console.log(formik.values.state)
 
   return (
     <CustomBox>
-      <Typography variant="h1"
-        sx={{fontSize: 20}}
+      <Typography 
+        variant="h1"
+        fontWeight={500}
+        sx={{ fontSize: 20 , marginBottom: '2rem' }}
       >
         Adicionar novo cliente
       </Typography>
@@ -102,7 +113,7 @@ export function NewCustomer() {
             <TextField
               fullWidth 
               // id='name'
-              label='Name'
+              label='Nome'
               name='name'
               value={formik.values.name}
               onChange={formik.handleChange}
@@ -146,10 +157,14 @@ export function NewCustomer() {
               error={formik.touched.federationUnity && Boolean(formik.errors.federationUnity)}
               helperText={formik.touched.federationUnity && formik.errors.federationUnity}
             >
-              {ufs.map((uf) => {
+              {federationUnities.map((federationUnity) => {
                 return (
-                  <MenuItem key={uf.id} value={uf.sigla} onClick={handleSelectedUf}>
-                    {uf.sigla}
+                  <MenuItem 
+                    key={federationUnity.id} 
+                    value={federationUnity.sigla} 
+                    onClick={handleSelectedUf}
+                  >
+                    {federationUnity.sigla}
                   </MenuItem>
                 )
               })}
@@ -193,9 +208,21 @@ export function NewCustomer() {
           </Grid>
         </Grid>
 
-        <Box sx={{width: 1, justifyContent: "flex-end"}}>
-          {/* <CustomButton sx={{width: 176, textTransform: "none"}} variant="outlined">Cancelar</CustomButton> */}
-          <Button sx={{width: 176, textTransform: "none"}} variant='outlined' type="submit">Adicionar</Button>
+        <Box sx={{width: 1, display: 'flex', justifyContent: 'flex-end', gap: 2, marginTop: '4rem'}}>
+          <Button 
+            sx={{ width: 176, textTransform:'none' }}
+            variant='outlined'
+            onClick={handleClose}
+          >Cancelar</Button>
+          <Button 
+            sx={{ width: 176, textTransform: "none" }} 
+            variant='contained' 
+            type="submit"
+            // onClick={formik.handleReset}
+          >
+            Adicionar
+          </Button>
+
         </Box>
       </form>
     </CustomBox>

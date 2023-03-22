@@ -1,4 +1,4 @@
-import { createTheme } from '@mui/material'
+import { createTheme} from '@mui/material/styles'
 
 export const defaultTheme = createTheme(({
   palette: {
@@ -17,6 +17,12 @@ export const defaultTheme = createTheme(({
       light: '#767676',
       dark: '#3A3A3A',
       contrastText: '#FFF'
+    }
+  },
+  typography: {
+    allVariants: {
+      fontFamily: 'inter',
+      fontSize: 12
     }
   }
 }))

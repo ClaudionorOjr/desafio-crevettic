@@ -1,15 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "./store";
 
-interface Customer {
-  name: string,
-  street: string,
-  streetNumber: string,
-  federationUnity: string,
-  city: string,
-  phone: string
-}
-
 const initialState: Customer = {
   name: '',
   street: '',
