@@ -1,15 +1,16 @@
 import { MouseEvent, useEffect, useState } from "react"
 import { useDispatch } from "react-redux"
+import {v4 as uuidv4} from 'uuid'
 import axios from "axios"
 
-import { Box, Button, Grid, MenuItem, TextField, Typography } from "@mui/material"
+import { Box, Button, Grid, MenuItem, Typography } from "@mui/material"
 import { useFormik } from "formik"
 import * as yup from 'yup'
 
 import { Customer } from "../../../redux/customer/reducer"
 import { addNewCustomerAction } from "../../../redux/customer/actions"
 
-import { CustomBox } from "./styles"
+import { CustomBox, CustomTextField } from "./styles"
 
 interface FederationUnities {
   id: number,
@@ -54,7 +55,7 @@ export function NewCustomer({ handleClose }: NewCustomerProps) {
     onSubmit: (values, actions) => {
 
       const newCustomer: Customer = {
-        id: Math.random(),
+        id: uuidv4(),
         name: values.name,
         street: values.street,
         streetNumber: Number(values.streetNumber),
@@ -108,8 +109,7 @@ export function NewCustomer({ handleClose }: NewCustomerProps) {
       <form noValidate onSubmit={handleSubmit}>
         <Grid container spacing={2} columns={5} >
           <Grid item xs={5}>
-            <TextField
-              fullWidth
+            <CustomTextField
               label='Nome'
               name='name'
               value={values.name}
@@ -120,8 +120,7 @@ export function NewCustomer({ handleClose }: NewCustomerProps) {
           </Grid>
 
           <Grid item xs={4}>
-            <TextField 
-              fullWidth
+            <CustomTextField
               label='Rua'
               name='street'
               value={values.street}
@@ -132,8 +131,7 @@ export function NewCustomer({ handleClose }: NewCustomerProps) {
           </Grid>
 
           <Grid item xs={1}>
-            <TextField 
-              fullWidth
+            <CustomTextField
               label='Número'
               name='streetNumber'
               value={values.streetNumber}
@@ -144,8 +142,7 @@ export function NewCustomer({ handleClose }: NewCustomerProps) {
           </Grid>
 
           <Grid item xs={1}>
-            <TextField 
-              fullWidth
+            <CustomTextField
               select
               label='Estado'
               name='federationUnity'
@@ -165,12 +162,11 @@ export function NewCustomer({ handleClose }: NewCustomerProps) {
                   </MenuItem>
                 )
               })}
-            </TextField>
+            </CustomTextField>
           </Grid>
 
           <Grid item xs={2}>
-            <TextField
-              fullWidth
+            <CustomTextField
               select
               label='Cidade'
               name='city'
@@ -189,12 +185,11 @@ export function NewCustomer({ handleClose }: NewCustomerProps) {
                   </MenuItem>
                 )
               })}
-            </TextField>
+            </CustomTextField>
           </Grid>
 
           <Grid item xs={2}>
-            <TextField
-              fullWidth
+            <CustomTextField
               label='Telefone'
               name='phone'
               value={values.phone}

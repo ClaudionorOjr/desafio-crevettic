@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
+import { v4 as uuidv4 } from 'uuid';
 
 import { MenuItem, InputAdornment, Grid, Button, Typography, Modal, Box } from '@mui/material'
 import { useFormik } from 'formik';
@@ -46,7 +47,7 @@ export function Sales() {
     onSubmit: (values, actions) => {
       
       const newSale: Sale = {
-        id: Math.random(),
+        id: uuidv4(),
         description: values.description,
         status: values.status,
         customer: values.customer,
@@ -92,12 +93,12 @@ export function Sales() {
                 error={touched.status && Boolean(errors.status)}
                 helperText={touched.status && errors.status}
               >
-                <MenuItem key='concluído' value='concluído' >
-                  Concluído
+                <MenuItem key='concluida' value='concluida' >
+                  Concluída
                 </MenuItem>
 
-                <MenuItem key='erro' value='erro'>
-                  Erro
+                <MenuItem key='cancelada' value='cancelada'>
+                  Cancelada
                 </MenuItem>
               </CustomTextField>
             </Grid>
@@ -127,7 +128,7 @@ export function Sales() {
                     </MenuItem>)
                 })}
 
-                <MenuItem sx={{border: 1, borderRadius: 1}}>
+                <MenuItem sx={{border: 1, borderRadius: 1, borderColor: '#999'}}>
                   <Typography >
                     Deseja cadastrar outro fornecedor?
                     <Button sx={{textTransform: 'none'}} onClick={handleOpen}>Cadastrar Fornecedor+</Button>

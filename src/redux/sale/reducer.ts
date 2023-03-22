@@ -1,7 +1,7 @@
 import { SaleActionTypes } from "./actions"
 
 export interface Sale {
-  id: number,
+  id: string,
   description: string,
   status: string,
   customer: string,

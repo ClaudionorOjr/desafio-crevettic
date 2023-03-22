@@ -1,7 +1,7 @@
 import { CustomerActionTypes } from "./actions"
 
 export interface Customer {
-  id: number
+  id: string,
   name: string,
   street: string,
   streetNumber: number,
@@ -24,7 +24,7 @@ interface CustomerAction {
 const initialState: CustomerState = {
   customers: [
     {
-      id: 1,
+      id: '2c14fb29-c790-4df3-8f46-58c0c5924d39',
       name: 'Danilo Lameira da Costa',
       street: 'Rua Francisco Mota',
       streetNumber: 572,
@@ -33,7 +33,7 @@ const initialState: CustomerState = {
       phone: '999999999'
     },
     {
-      id: 2,
+      id: 'ce897ece-c39e-4b15-9893-0b49c2bce084',
       name: 'Samir Afonso Tabanez',
       street: 'Rua Francisco Mota',
       streetNumber: 572,
@@ -42,7 +42,7 @@ const initialState: CustomerState = {
       phone: '999999999'
     },
     {
-      id: 3,
+      id: 'cfeece47-2c4c-4aac-86be-1a7e9ed0668b',
       name: 'Cândido Figueiredo Semedo',
       street: 'Rua Francisco Mota',
       streetNumber: 572,
@@ -51,7 +51,7 @@ const initialState: CustomerState = {
       phone: '999999999'
     },
     {
-      id: 4,
+      id: '52a04259-2f3d-474b-b240-3b788c2e81e7',
       name: 'Saúl Santos Sandinha',
       street: 'Rua Francisco Mota',
       streetNumber: 572,
