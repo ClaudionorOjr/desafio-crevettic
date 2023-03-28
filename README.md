@@ -8,6 +8,7 @@
 - Formik
 - Material UI
 - React
+- React-number-format
 - Redux
 - UUIDV4
 - TypeScript
@@ -29,7 +30,7 @@ npm run dev
 
 ### To Do
 
-- [] Adicionar máscaras aos inputs
-- [] Atualizar a lib do redux para o redux toolkit
-- [] Alterar o estilo global utilizando Material UI
-- [] Adicionar eslint
+- [x] Adicionar máscaras aos inputs
+- [ ] Atualizar a lib do redux para o redux toolkit
+- [ ] Alterar o estilo global utilizando Material UI
+- [ ] Adicionar eslint

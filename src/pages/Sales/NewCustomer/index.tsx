@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux"
 import {v4 as uuidv4} from 'uuid'
 import axios from "axios"
 
-import { Box, Button, Grid, MenuItem, Typography } from "@mui/material"
+import { Box, Button, Grid, MenuItem, TextField, Typography } from "@mui/material"
 import { useFormik } from "formik"
 import * as yup from 'yup'
 
@@ -11,6 +11,7 @@ import { Customer } from "../../../redux/customer/reducer"
 import { addNewCustomerAction } from "../../../redux/customer/actions"
 
 import { CustomBox, CustomTextField } from "./styles"
+import { NumericFormat, PatternFormat } from "react-number-format"
 
 interface FederationUnities {
   id: number,
@@ -26,13 +27,16 @@ interface NewCustomerProps {
   handleClose: () => void
 }
 
-const formSchema = yup.object().shape({
-  name: yup.string().required('Campo obrigatório'),
-  street: yup.string().required('Campo obrigatório'),
+const newCustomerFormSchema = yup.object().shape({
+  name: yup.string().required('Campo obrigatório').min(5, 'Informe o nome completo do cliente'),
+  street: yup.string().required('Campo obrigatório').min(5, 'Informe o nome completo da rua'),
   streetNumber: yup.number().required('Campo obrigatório'),
   federationUnity: yup.string().required('Campo obrigatório'),
   city: yup.string().required('Campo obrigatório'),
-  phone: yup.string().required('Campo obrigatório')
+  phone: yup.string()
+  .required('Campo obrigatório')
+  .transform((value) => (value.replace(/[\D]/g,'')))
+  .min(10, 'Número incompleto')
 })
 
 export function NewCustomer({ handleClose }: NewCustomerProps) {
@@ -51,7 +55,7 @@ export function NewCustomer({ handleClose }: NewCustomerProps) {
       city: '',
       phone: ''
     },
-    validationSchema: formSchema,
+    validationSchema: newCustomerFormSchema,
     onSubmit: (values, actions) => {
 
       const newCustomer: Customer = {
@@ -189,13 +193,25 @@ export function NewCustomer({ handleClose }: NewCustomerProps) {
           </Grid>
 
           <Grid item xs={2}>
-            <CustomTextField
+            <PatternFormat
+              customInput={TextField}
+              format={"(##) #########"}
+              sx={{
+                width: '100%',
+                input: {
+                  fontWeight: 500
+                },
+                label: {
+                  color: `#545454`,
+                  fontWeight: 500
+                }
+              }}
               label='Telefone'
               name='phone'
               value={values.phone}
               onChange={handleChange}
               error={touched.phone && Boolean(errors.phone)}
-              helperText={touched.phone && errors.phone}
+              helperText={touched.phone && errors.phone} 
             />
           </Grid>
         </Grid>

@@ -2,9 +2,9 @@ import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
 
-import { MenuItem, InputAdornment, Grid, Button, Typography, Modal, Box } from '@mui/material'
+import { MenuItem, Grid, Button, Typography, Modal, Box, TextField } from '@mui/material'
 import { useFormik } from 'formik';
-import * as yup from 'yup'
+import * as yup from 'yup'  
 
 import { RootState } from '../../redux/rootReducer';
 import { Sale } from '../../redux/sale/reducer';
@@ -13,14 +13,16 @@ import { addNewSaleAction } from '../../redux/sale/actions';
 import { NewCustomer } from './NewCustomer';
 
 import { CustomBox, CustomForm, CustomTextField, CustomTypography } from './styles';
+import { NumericFormat } from 'react-number-format';
 
 const newSaleFormSchema = yup.object().shape({
-  description: yup.string().required('Campo obrigatório'),
+  description: yup.string().required('Campo obrigatório').min(5, 'Descrição curta demais'),
   status: yup.string().required('Campo obrigatório'),
   customer: yup.string().required('Campo obrigatório'),
   saleDate: yup.date().required('Campo obrigatório'),
-  amount: yup.number().required('Campo obrigatório'),
-  price: yup.number().required('Campo obrigatório')
+  amount: yup.string().required('Campo obrigatório'),
+  price: yup.string().required('Campo obrigatório')
+  
 })
 
 // type newSaleFormData = yup.InferType<typeof newSaleFormSchema>
@@ -45,6 +47,12 @@ export function Sales() {
     },
     validationSchema: newSaleFormSchema,
     onSubmit: (values, actions) => {
+
+      values.price = values.price.replace(/[R$\.]/g,'')
+      values.price = values.price.replace(/[,]/g,'.')
+      
+      values.amount = values.amount.replace(/[Kg]/g,'')
+      values.amount = values.amount.replace(/[,]/g,'.')
       
       const newSale: Sale = {
         id: uuidv4(),
@@ -144,8 +152,9 @@ export function Sales() {
 
             <Grid item xs={1}>
               <CustomTextField
-                label='Data da venda'
+                // label='Data da venda'
                 name='saleDate'
+                type='date'
                 value={values.saleDate}
                 onChange={handleChange}
                 error={touched.saleDate && Boolean(errors.saleDate)}
@@ -154,10 +163,21 @@ export function Sales() {
             </Grid>
 
             <Grid item xs={1}>
-              <CustomTextField
-                InputProps={{
-                  endAdornment: <InputAdornment position='end'>kg</InputAdornment>,
-                }}
+              <NumericFormat 
+                customInput={TextField}
+                suffix={' Kg'}
+                decimalScale={2}
+                decimalSeparator={","}
+                allowNegative={false}
+                sx={{
+                  width: '100%',
+                  input: {
+                    fontWeight: 500
+                  },
+                  label: { 
+                    color: `#545454`,
+                    fontWeight: 500
+                  }}}
                 label='Quantidade'
                 name='amount'
                 value={values.amount}
@@ -168,7 +188,24 @@ export function Sales() {
             </Grid>
 
             <Grid item xs={1}>
-              <CustomTextField
+              <NumericFormat
+                customInput={TextField}
+                prefix={'R$ '}
+                thousandsGroupStyle={'thousand'}
+                thousandSeparator={'.'}
+                decimalScale={2}
+                fixedDecimalScale={true}
+                decimalSeparator={","}
+                allowNegative={false}
+                sx={{
+                  width: '100%',
+                  input: {
+                    fontWeight: 500
+                  },
+                  label: { 
+                    color: `#545454`,
+                    fontWeight: 500
+                  }}}
                 label='Preço da venda'
                 name='price'
                 value={values.price}
