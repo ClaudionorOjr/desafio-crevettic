@@ -1,40 +1,57 @@
 import { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
-import { v4 as uuidv4 } from 'uuid';
+import { useDispatch, useSelector } from 'react-redux'
+import { v4 as uuidv4 } from 'uuid'
 
-import { MenuItem, Grid, Button, Typography, Modal, Box, TextField } from '@mui/material'
-import { useFormik } from 'formik';
-import * as yup from 'yup'  
+import {
+  MenuItem,
+  Grid,
+  Button,
+  Typography,
+  Modal,
+  Box,
+  TextField,
+} from '@mui/material'
+import { useFormik } from 'formik'
+import * as yup from 'yup'
 
-import { RootState } from '../../redux/rootReducer';
-import { Sale } from '../../redux/sale/reducer';
-import { addNewSaleAction } from '../../redux/sale/actions';
+import { RootState } from '../../redux/rootReducer'
+import { Sale } from '../../redux/sale/reducer'
+import { addNewSaleAction } from '../../redux/sale/actions'
 
-import { NewCustomer } from './NewCustomer';
+import { NewCustomer } from './NewCustomer'
 
-import { CustomBox, CustomForm, CustomTextField, CustomTypography } from './styles';
-import { NumericFormat } from 'react-number-format';
+import {
+  CustomBox,
+  CustomForm,
+  CustomTextField,
+  CustomTypography,
+} from './styles'
+import { NumericFormat } from 'react-number-format'
 
 const newSaleFormSchema = yup.object().shape({
-  description: yup.string().required('Campo obrigatório').min(5, 'Descrição curta demais'),
+  description: yup
+    .string()
+    .required('Campo obrigatório')
+    .min(5, 'Descrição curta demais'),
   status: yup.string().required('Campo obrigatório'),
   customer: yup.string().required('Campo obrigatório'),
   saleDate: yup.date().required('Campo obrigatório'),
   amount: yup.string().required('Campo obrigatório'),
-  price: yup.string().required('Campo obrigatório')
-  
+  price: yup.string().required('Campo obrigatório'),
 })
 
 // type newSaleFormData = yup.InferType<typeof newSaleFormSchema>
 
 export function Sales() {
-  const [modal, setModal] = useState(false);
+  const [modal, setModal] = useState(false)
   const dispatch = useDispatch()
-  
-  const handleOpen = () => setModal(true);
-  const handleClose = () => setModal(false);
-  
-  const { customers } = useSelector((rootReducer: RootState) => rootReducer.customerReducer)
+
+  const handleOpen = () => setModal(true)
+  const handleClose = () => setModal(false)
+
+  const { customers } = useSelector(
+    (rootReducer: RootState) => rootReducer.customerReducer,
+  )
 
   const newSaleForm = useFormik({
     initialValues: {
@@ -43,17 +60,16 @@ export function Sales() {
       customer: '',
       saleDate: '',
       amount: '',
-      price: ''
+      price: '',
     },
     validationSchema: newSaleFormSchema,
     onSubmit: (values, actions) => {
+      values.price = values.price.replace(/[R$.]/g, '')
+      values.price = values.price.replace(/[,]/g, '.')
 
-      values.price = values.price.replace(/[R$\.]/g,'')
-      values.price = values.price.replace(/[,]/g,'.')
-      
-      values.amount = values.amount.replace(/[Kg]/g,'')
-      values.amount = values.amount.replace(/[,]/g,'.')
-      
+      values.amount = values.amount.replace(/[Kg]/g, '')
+      values.amount = values.amount.replace(/[,]/g, '.')
+
       const newSale: Sale = {
         id: uuidv4(),
         description: values.description,
@@ -67,23 +83,37 @@ export function Sales() {
       dispatch(addNewSaleAction(newSale))
 
       actions.resetForm()
-    }
+    },
   })
 
-  const { handleSubmit, handleChange, handleReset, values, touched, errors, isSubmitting } = newSaleForm
+  const {
+    handleSubmit,
+    handleChange,
+    handleReset,
+    values,
+    touched,
+    errors,
+    isSubmitting,
+  } = newSaleForm
 
   return (
-    <Box sx={{ width: '100vw', height: 'calc(100vh - 5rem)', display: 'flex', alignItems: 'center'}}>    
+    <Box
+      sx={{
+        width: '100vw',
+        height: 'calc(100vh - 5rem)',
+        display: 'flex',
+        alignItems: 'center',
+      }}
+    >
       <CustomBox>
-        <CustomTypography variant='h1'>Dados da Venda</CustomTypography>
+        <CustomTypography variant="h1">Dados da Venda</CustomTypography>
 
         <CustomForm noValidate onSubmit={handleSubmit}>
           <Grid container spacing={2} columns={3}>
-            
             <Grid item xs={3}>
-              <CustomTextField 
-                label='Descrição' 
-                name='description'
+              <CustomTextField
+                label="Descrição"
+                name="description"
                 value={values.description}
                 onChange={handleChange}
                 error={touched.description && Boolean(errors.description)}
@@ -95,17 +125,17 @@ export function Sales() {
               <CustomTextField
                 select
                 label="Status"
-                name='status'
+                name="status"
                 value={values.status}
                 onChange={handleChange}
                 error={touched.status && Boolean(errors.status)}
                 helperText={touched.status && errors.status}
               >
-                <MenuItem key='concluida' value='concluida' >
+                <MenuItem key="concluida" value="concluida">
                   Concluída
                 </MenuItem>
 
-                <MenuItem key='cancelada' value='cancelada'>
+                <MenuItem key="cancelada" value="cancelada">
                   Cancelada
                 </MenuItem>
               </CustomTextField>
@@ -115,11 +145,12 @@ export function Sales() {
               <CustomTextField
                 SelectProps={{
                   MenuProps: {
-                    sx: { maxHeight: 200},
-                  }}}
+                    sx: { maxHeight: 200 },
+                  },
+                }}
                 select
                 label="Cliente"
-                name='customer'
+                name="customer"
                 value={values.customer}
                 onChange={handleChange}
                 error={touched.customer && Boolean(errors.customer)}
@@ -127,34 +158,38 @@ export function Sales() {
               >
                 {customers.map((customer) => {
                   return (
-                    <MenuItem 
-                      key={customer.id} 
+                    <MenuItem
+                      key={customer.id}
                       value={customer.name}
-                      sx={{ fontWeight: 500}}
+                      sx={{ fontWeight: 500 }}
                     >
                       {customer.name}
-                    </MenuItem>)
+                    </MenuItem>
+                  )
                 })}
 
-                <MenuItem sx={{border: 1, borderRadius: 1, borderColor: '#999'}}>
-                  <Typography >
+                <MenuItem
+                  sx={{ border: 1, borderRadius: 1, borderColor: '#999' }}
+                >
+                  <Typography>
                     Deseja cadastrar outro fornecedor?
-                    <Button sx={{textTransform: 'none'}} onClick={handleOpen}>Cadastrar Fornecedor+</Button>
+                    <Button sx={{ textTransform: 'none' }} onClick={handleOpen}>
+                      Cadastrar Fornecedor+
+                    </Button>
                   </Typography>
                 </MenuItem>
-
               </CustomTextField>
             </Grid>
 
             <Modal open={modal} onClose={handleClose}>
-              <NewCustomer handleClose={handleClose}/>
+              <NewCustomer handleClose={handleClose} />
             </Modal>
 
             <Grid item xs={1}>
               <CustomTextField
                 // label='Data da venda'
-                name='saleDate'
-                type='date'
+                name="saleDate"
+                type="date"
                 value={values.saleDate}
                 onChange={handleChange}
                 error={touched.saleDate && Boolean(errors.saleDate)}
@@ -163,23 +198,24 @@ export function Sales() {
             </Grid>
 
             <Grid item xs={1}>
-              <NumericFormat 
+              <NumericFormat
                 customInput={TextField}
                 suffix={' Kg'}
                 decimalScale={2}
-                decimalSeparator={","}
+                decimalSeparator={','}
                 allowNegative={false}
                 sx={{
                   width: '100%',
                   input: {
-                    fontWeight: 500
+                    fontWeight: 500,
                   },
-                  label: { 
+                  label: {
                     color: `#545454`,
-                    fontWeight: 500
-                  }}}
-                label='Quantidade'
-                name='amount'
+                    fontWeight: 500,
+                  },
+                }}
+                label="Quantidade"
+                name="amount"
                 value={values.amount}
                 onChange={handleChange}
                 error={touched.amount && Boolean(errors.amount)}
@@ -195,19 +231,20 @@ export function Sales() {
                 thousandSeparator={'.'}
                 decimalScale={2}
                 fixedDecimalScale={true}
-                decimalSeparator={","}
+                decimalSeparator={','}
                 allowNegative={false}
                 sx={{
                   width: '100%',
                   input: {
-                    fontWeight: 500
+                    fontWeight: 500,
                   },
-                  label: { 
+                  label: {
                     color: `#545454`,
-                    fontWeight: 500
-                  }}}
-                label='Preço da venda'
-                name='price'
+                    fontWeight: 500,
+                  },
+                }}
+                label="Preço da venda"
+                name="price"
                 value={values.price}
                 onChange={handleChange}
                 error={touched.price && Boolean(errors.price)}
@@ -215,21 +252,21 @@ export function Sales() {
               />
             </Grid>
 
-            <Grid item xs={3/2}>
-              <Button 
-                sx={{width: 1, fontWeight: 600}}
-                variant='contained'
-                color='neutral'
+            <Grid item xs={3 / 2}>
+              <Button
+                sx={{ width: 1, fontWeight: 600 }}
+                variant="contained"
+                color="neutral"
                 onClick={handleReset}
-              > 
+              >
                 Voltar
               </Button>
             </Grid>
-            <Grid item xs={3/2}>
-              <Button 
-                sx={{width: 1, fontWeight: 600}} 
-                variant='contained'
-                type='submit'
+            <Grid item xs={3 / 2}>
+              <Button
+                sx={{ width: 1, fontWeight: 600 }}
+                variant="contained"
+                type="submit"
                 disabled={isSubmitting}
               >
                 Salvar

@@ -33,4 +33,4 @@ npm run dev
 - [x] Adicionar máscaras aos inputs
 - [ ] Atualizar a lib do redux para o redux toolkit
 - [ ] Alterar o estilo global utilizando Material UI
-- [ ] Adicionar eslint
+- [x] Adicionar eslint

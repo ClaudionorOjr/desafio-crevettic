@@ -1,4 +1,4 @@
-import { Box, BoxProps, styled, TextField, TextFieldProps } from "@mui/material";
+import { Box, BoxProps, styled, TextField, TextFieldProps } from '@mui/material'
 
 export const CustomBox = styled(Box)<BoxProps>(({ theme }) => ({
   position: 'absolute' as 'absolute',
@@ -12,13 +12,15 @@ export const CustomBox = styled(Box)<BoxProps>(({ theme }) => ({
   borderRadius: 5,
 }))
 
-export const CustomTextField = styled(TextField)<TextFieldProps>(({ theme }) => ({
-  width: '100%',
-  input: {
-    fontWeight: 500
-  },
-  label: { 
-    color: `${theme.palette.neutral?.main}`,
-    fontWeight: 500
-  }
-}))
+export const CustomTextField = styled(TextField)<TextFieldProps>(
+  ({ theme }) => ({
+    width: '100%',
+    input: {
+      fontWeight: 500,
+    },
+    label: {
+      color: `${theme.palette.neutral?.main}`,
+      fontWeight: 500,
+    },
+  }),
+)

@@ -1,15 +1,16 @@
-import "@mui/material/styles/createPalette";
-declare module "@mui/material/styles/createPalette" {
+/* eslint-disable no-undef */
+import '@mui/material/styles/createPalette'
+declare module '@mui/material/styles/createPalette' {
   interface Palette {
-    neutral?: PaletteColor;
+    neutral?: PaletteColor
   }
   interface PaletteOptions {
-    neutral?: PaletteColorOptions;
+    neutral?: PaletteColorOptions
   }
 }
 
 declare module '@mui/material/Button' {
   interface ButtonPropsColorOverrides {
-    neutral: true;
+    neutral: true
   }
 }

@@ -1,12 +1,12 @@
-import { CustomerActionTypes } from "./actions"
+import { CustomerActionTypes } from './actions'
 
 export interface Customer {
-  id: string,
-  name: string,
-  street: string,
-  streetNumber: number,
-  federationUnity: string,
-  city: string,
+  id: string
+  name: string
+  street: string
+  streetNumber: number
+  federationUnity: string
+  city: string
   phone: string
 }
 
@@ -15,7 +15,7 @@ export interface CustomerState {
 }
 
 interface CustomerAction {
-  type: string,
+  type: string
   payload: {
     customer: Customer
   }
@@ -30,7 +30,7 @@ const initialState: CustomerState = {
       streetNumber: 572,
       federationUnity: 'RN',
       city: 'Mossoró',
-      phone: '999999999'
+      phone: '999999999',
     },
     {
       id: 'ce897ece-c39e-4b15-9893-0b49c2bce084',
@@ -39,7 +39,7 @@ const initialState: CustomerState = {
       streetNumber: 572,
       federationUnity: 'RN',
       city: 'Mossoró',
-      phone: '999999999'
+      phone: '999999999',
     },
     {
       id: 'cfeece47-2c4c-4aac-86be-1a7e9ed0668b',
@@ -48,7 +48,7 @@ const initialState: CustomerState = {
       streetNumber: 572,
       federationUnity: 'RN',
       city: 'Mossoró',
-      phone: '999999999'
+      phone: '999999999',
     },
     {
       id: '52a04259-2f3d-474b-b240-3b788c2e81e7',
@@ -57,17 +57,17 @@ const initialState: CustomerState = {
       streetNumber: 572,
       federationUnity: 'RN',
       city: 'Mossoró',
-      phone: '999999999'
+      phone: '999999999',
     },
-  ]
+  ],
 }
 
 export function customerReducer(state = initialState, action: CustomerAction) {
   switch (action.type) {
-    case CustomerActionTypes.ADD_NEW_CUSTOMER: 
+    case CustomerActionTypes.ADD_NEW_CUSTOMER:
       return {
         ...state,
-        customers: [...state.customers, action.payload.customer]
+        customers: [...state.customers, action.payload.customer],
       }
     default:
       return state

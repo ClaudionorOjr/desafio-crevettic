@@ -1,11 +1,11 @@
-import { createTheme} from '@mui/material/styles'
+import { createTheme } from '@mui/material/styles'
 
-export const defaultTheme = createTheme(({
+export const defaultTheme = createTheme({
   palette: {
     primary: {
       main: '#0076C6',
       light: '#3391D1',
-      dark: '#00528A'
+      dark: '#00528A',
     },
     secondary: {
       main: '#E98F0A',
@@ -16,13 +16,13 @@ export const defaultTheme = createTheme(({
       main: '#545454',
       light: '#767676',
       dark: '#3A3A3A',
-      contrastText: '#FFF'
-    }
+      contrastText: '#FFF',
+    },
   },
   typography: {
     allVariants: {
       fontFamily: 'inter',
-      fontSize: 12
-    }
-  }
-}))
+      fontSize: 12,
+    },
+  },
+})
