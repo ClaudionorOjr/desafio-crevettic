@@ -10,6 +10,8 @@ import {
   Modal,
   Box,
   TextField,
+  Snackbar,
+  Alert,
 } from '@mui/material'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
@@ -43,10 +45,30 @@ const newSaleFormSchema = yup.object().shape({
 
 export function Sales() {
   const [modal, setModal] = useState(false)
+  const [toastifyCustomer, setToastifyCustomer] = useState(false)
+  const [toastifySale, setToastifySale] = useState(false)
   const dispatch = useDispatch()
 
-  const handleOpen = () => setModal(true)
-  const handleClose = () => setModal(false)
+  function handleOpenModal() {
+    setModal(true)
+  }
+  function handleCloseModal() {
+    setModal(false)
+  }
+
+  function handleOpenToastifyCustomer() {
+    setToastifyCustomer(true)
+  }
+  function handleCloseToastifyCustomer() {
+    setToastifyCustomer(false)
+  }
+
+  function handleOpenToastifySale() {
+    setToastifySale(true)
+  }
+  function handleCloseToastifySale() {
+    setToastifySale(false)
+  }
 
   const { customers } = useSelector(
     (rootReducer: RootState) => rootReducer.customerReducer,
@@ -80,6 +102,8 @@ export function Sales() {
       }
 
       dispatch(addNewSaleAction(newSale))
+
+      handleOpenToastifySale()
 
       actions.resetForm()
     },
@@ -172,17 +196,16 @@ export function Sales() {
                 >
                   <Typography>
                     Deseja cadastrar outro fornecedor?
-                    <Button sx={{ textTransform: 'none' }} onClick={handleOpen}>
+                    <Button
+                      sx={{ textTransform: 'none' }}
+                      onClick={handleOpenModal}
+                    >
                       Cadastrar Fornecedor+
                     </Button>
                   </Typography>
                 </MenuItem>
               </CustomTextField>
             </Grid>
-
-            <Modal open={modal} onClose={handleClose}>
-              <NewCustomer handleClose={handleClose} />
-            </Modal>
 
             <Grid item xs={1}>
               <CustomTextField
@@ -274,6 +297,43 @@ export function Sales() {
           </Grid>
         </CustomForm>
       </CustomBox>
+
+      <Modal open={modal} onClose={handleCloseModal}>
+        <NewCustomer
+          handleCloseModal={handleCloseModal}
+          handleOpenToastify={handleOpenToastifyCustomer}
+        />
+      </Modal>
+
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        open={toastifyCustomer}
+        autoHideDuration={4000}
+        onClose={handleCloseToastifyCustomer}
+      >
+        <Alert
+          onClose={handleCloseToastifyCustomer}
+          variant="filled"
+          severity="success"
+        >
+          Cliente cadastrado com sucesso!
+        </Alert>
+      </Snackbar>
+
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        open={toastifySale}
+        autoHideDuration={4000}
+        onClose={handleCloseToastifySale}
+      >
+        <Alert
+          onClose={handleCloseToastifySale}
+          variant="filled"
+          severity="success"
+        >
+          Venda realizada com sucesso!
+        </Alert>
+      </Snackbar>
     </Box>
   )
 }

@@ -30,7 +30,8 @@ interface Cities {
 }
 
 interface NewCustomerProps {
-  handleClose: () => void
+  handleCloseModal: () => void
+  handleOpenToastify: () => void
 }
 
 const newCustomerFormSchema = yup.object().shape({
@@ -52,7 +53,10 @@ const newCustomerFormSchema = yup.object().shape({
     .min(10, 'Número incompleto'),
 })
 
-export function NewCustomer({ handleClose }: NewCustomerProps) {
+export function NewCustomer({
+  handleCloseModal,
+  handleOpenToastify,
+}: NewCustomerProps) {
   const [federationUnities, setFederationUnities] = useState<
     FederationUnities[]
   >([])
@@ -85,6 +89,12 @@ export function NewCustomer({ handleClose }: NewCustomerProps) {
       dispatch(addNewCustomerAction(newCustomer))
 
       actions.resetForm()
+
+      handleOpenToastify()
+
+      setTimeout(() => {
+        handleCloseModal()
+      }, 500)
     },
   })
 
@@ -242,7 +252,7 @@ export function NewCustomer({ handleClose }: NewCustomerProps) {
           <Button
             sx={{ width: 176, textTransform: 'none' }}
             variant="outlined"
-            onClick={handleClose}
+            onClick={handleCloseModal}
           >
             Cancelar
           </Button>
