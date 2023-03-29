@@ -1,4 +1,4 @@
-import { CustomerActionTypes } from './actions'
+import { createSlice } from '@reduxjs/toolkit'
 
 export interface Customer {
   id: string
@@ -10,15 +10,8 @@ export interface Customer {
   phone: string
 }
 
-export interface CustomerState {
+interface CustomerState {
   customers: Customer[]
-}
-
-interface CustomerAction {
-  type: string
-  payload: {
-    customer: Customer
-  }
 }
 
 const initialState: CustomerState = {
@@ -62,14 +55,16 @@ const initialState: CustomerState = {
   ],
 }
 
-export function customerReducer(state = initialState, action: CustomerAction) {
-  switch (action.type) {
-    case CustomerActionTypes.ADD_NEW_CUSTOMER:
-      return {
-        ...state,
-        customers: [...state.customers, action.payload.customer],
-      }
-    default:
-      return state
-  }
-}
+export const customerSlice = createSlice({
+  name: 'customer',
+  initialState,
+  //* Adicionar as actions
+  reducers: {
+    addNewCustomerAction(state, action) {
+      return { ...state, customers: [...state.customers, action.payload] }
+    },
+  },
+})
+
+export const { addNewCustomerAction } = customerSlice.actions
+export default customerSlice.reducer

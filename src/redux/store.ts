@@ -1,7 +1,15 @@
-import { applyMiddleware, createStore } from 'redux'
+import { configureStore } from '@reduxjs/toolkit'
 import logger from 'redux-logger'
-import rootReducer from './rootReducer'
 
-const store = createStore(rootReducer, applyMiddleware(logger))
+import customerReducer from './customer/slice'
+import saleReducer from './sale/slice'
 
-export default store
+export const store = configureStore({
+  reducer: {
+    customerReducer,
+    saleReducer,
+  },
+  middleware: [logger],
+})
+
+export type RootState = ReturnType<typeof store.getState>

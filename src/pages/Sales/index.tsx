@@ -14,9 +14,7 @@ import {
 import { useFormik } from 'formik'
 import * as yup from 'yup'
 
-import { RootState } from '../../redux/rootReducer'
-import { Sale } from '../../redux/sale/reducer'
-import { addNewSaleAction } from '../../redux/sale/actions'
+import { addNewSaleAction, Sale } from '../../redux/sale/slice'
 
 import { NewCustomer } from './NewCustomer'
 
@@ -27,6 +25,7 @@ import {
   CustomTypography,
 } from './styles'
 import { NumericFormat } from 'react-number-format'
+import { RootState } from '../../redux/store'
 
 const newSaleFormSchema = yup.object().shape({
   description: yup

@@ -14,8 +14,7 @@ import {
 import { useFormik } from 'formik'
 import * as yup from 'yup'
 
-import { Customer } from '../../../redux/customer/reducer'
-import { addNewCustomerAction } from '../../../redux/customer/actions'
+import { addNewCustomerAction, Customer } from '../../../redux/customer/slice'
 
 import { CustomBox, CustomTextField } from './styles'
 import { PatternFormat } from 'react-number-format'

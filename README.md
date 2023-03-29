@@ -31,6 +31,6 @@ npm run dev
 ### To Do
 
 - [x] Adicionar máscaras aos inputs
-- [ ] Atualizar a lib do redux para o redux toolkit
+- [x] Atualizar a lib do redux para o redux toolkit
 - [ ] Alterar o estilo global utilizando Material UI
 - [x] Adicionar eslint
